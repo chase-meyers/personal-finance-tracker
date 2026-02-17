@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useFinanceStore } from "./store/useFinanceStore";
 import {
   PieChart,
   Pie,
@@ -22,7 +23,26 @@ const DEFAULT_INCOME = [
 ];
 
 export default function Income() {
-  const [recurringIncome, setRecurringIncome] = useState([]);
+  const { recurringIncome, setRecurringIncome } = useFinanceStore();
+  
+  console.log("recurringIncome =", recurringIncome);
+  
+  const safeIncome = useMemo(() => {
+    return Array.isArray(recurringIncome)
+      ? recurringIncome.filter(item => item && typeof item === "object")
+      : [];
+}, [recurringIncome]);
+
+
+  const totalIncome = safeIncome.reduce(
+    (sum, item) => sum + Number(item.amount || 0),
+    0
+  );
+  const categoryTotals = safeIncome.reduce((acc, item) => {
+    const category = item.category || "Other";
+    acc[category] = (acc[category] || 0) + Number(item.amount || 0);
+    return acc;
+  }, {});
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState({
     name: "",
@@ -32,25 +52,26 @@ export default function Income() {
 
   useEffect(() => {
     setRecurringIncome(DEFAULT_INCOME);
-  }, []);
+  }, [setRecurringIncome]);
+
 
   const totalThisMonth = useMemo(
     () =>
-      recurringIncome.reduce(
+      safeIncome.reduce(
         (sum, item) => sum + Number(item.amount || 0),
         0
       ),
-    [recurringIncome]
+    [safeIncome]
   );
 
   const categoryBreakdown = useMemo(() => {
     const map = {};
-    recurringIncome.forEach((item) => {
+    safeIncome.forEach((item) => {
       const key = item.category || "Other";
       map[key] = (map[key] || 0) + Number(item.amount || 0);
     });
     return Object.entries(map).map(([name, value]) => ({ name, value }));
-  }, [recurringIncome]);
+  }, [safeIncome]);
 
   const startAdd = () => {
     setEditingId(null);
@@ -68,34 +89,27 @@ export default function Income() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.name || !form.amount) return;
 
-    if (editingId) {
-      setRecurringIncome((prev) =>
-        prev.map((item) =>
-          item.id === editingId ? { ...item, ...form } : item
-        )
-      );
-    } else {
-      const newItem = {
-        id: Date.now(),
-        name: form.name,
-        amount: Number(form.amount),
-        category: form.category,
-      };
-      setRecurringIncome((prev) => [...prev, newItem]);
-    }
-
-    setEditingId(null);
-    setForm({ name: "", amount: "", category: "Salary" });
+  const newItem = {
+    id: crypto.randomUUID(),
+    name: form.name,
+    amount: Number(form.amount),
+    category: form.category,
   };
 
+  setRecurringIncome(prev =>
+    Array.isArray(prev) ? [...prev, newItem] : [newItem]
+  );
+
+  setForm({ name: "", amount: "", category: "Salary" });
+};
+
   const handleDelete = (id) => {
-    setRecurringIncome((prev) => prev.filter((item) => item.id !== id));
-    if (editingId === id) {
-      setEditingId(null);
-      setForm({ name: "", amount: "", category: "Salary" });
-    }
+    setRecurringIncome(prev =>
+      Array.isArray(prev)
+        ? prev.filter(item => item.id !== id)
+        : []
+    );
   };
 
   return (
@@ -104,7 +118,24 @@ export default function Income() {
       <p style={{ color: "#64748B", marginBottom: "24px" }}>
         Monthly recurring income, auto‑applied every month. No re‑entry.
       </p>
-
+      <div style={{ 
+        background: "white",
+        padding: "16px",
+        borderRadius: "12px",
+        marginBottom: "20px",
+        boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
+      }}>
+        <h2 style={{ margin: 0, color: "#0F172A" }}>
+          Total Monthly Income: ${totalIncome.toLocaleString()}
+        </h2>
+      </div>
+      <div style={{ marginTop: "12px" }}>
+        {Object.entries(categoryTotals).map(([category, amount]) => (
+          <div key={category}>
+            {category}: ${amount.toLocaleString()}
+          </div>
+        ))}
+      </div>
       {/* Top summary + chart */}
       <div
         style={{
@@ -243,7 +274,7 @@ export default function Income() {
             </div>
           )}
 
-          {recurringIncome.map((item) => (
+          {safeIncome.map((item) => (
             <div
               key={item.id}
               style={{

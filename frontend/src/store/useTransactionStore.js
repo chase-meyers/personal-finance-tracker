@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { DEFAULT_TRANSACTION_CATEGORIES } from "../transactions/transactionCategories";
+import { useFinanceStore } from "./useFinanceStore";
 
 const API_URL = "http://127.0.0.1:5000/api/transactions";
 
@@ -11,6 +12,27 @@ const normalizeCategory = (value) => {
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : "Other";
 };
+
+const isCurrentMonthDate = (value) => {
+  const parsed = new Date(value);
+  if (Number.isNaN(parsed.getTime())) {
+    return false;
+  }
+
+  const now = new Date();
+  return (
+    parsed.getFullYear() === now.getFullYear() &&
+    parsed.getMonth() === now.getMonth()
+  );
+};
+
+const sumCurrentMonthSpending = (transactions) =>
+  (Array.isArray(transactions) ? transactions : []).reduce((total, transaction) => {
+    if (!isCurrentMonthDate(transaction?.date)) {
+      return total;
+    }
+    return total + Number(transaction?.amount || 0);
+  }, 0);
 
 export const useTransactionStore = create((set, get) => ({
   transactions: [],
@@ -39,6 +61,9 @@ export const useTransactionStore = create((set, get) => ({
         categories: Array.from(existingCategories),
         isLoading: false,
       });
+      useFinanceStore
+        .getState()
+        .setTotalMonthlySpending(sumCurrentMonthSpending(transactions));
     } catch (error) {
       set({
         isLoading: false,
@@ -105,15 +130,23 @@ export const useTransactionStore = create((set, get) => ({
       }
 
       get().addCategory(normalized);
-      set((state) => ({
-        transactions: state.transactions.map((transaction) =>
+      set((state) => {
+        const nextTransactions = state.transactions.map((transaction) =>
           transaction.id === id ? { ...transaction, category: normalized } : transaction
-        ),
-      }));
+        );
+        useFinanceStore
+          .getState()
+          .setTotalMonthlySpending(sumCurrentMonthSpending(nextTransactions));
+        return {
+          transactions: nextTransactions,
+        };
+      });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to update category.";
       set({ error: message });
       throw error;
     }
   },
+
+  getCurrentMonthSpending: () => sumCurrentMonthSpending(get().transactions),
 }));

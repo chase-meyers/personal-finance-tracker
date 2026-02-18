@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useTransactionStore } from "./store/useTransactionStore";
 import TransactionForm from "./transactions/TransactionForm";
 import TransactionItem from "./transactions/TransactionItem";
@@ -14,8 +14,13 @@ export default function RecentTransactions() {
     addCategory,
     updateTransactionCategory,
   } = useTransactionStore();
+  const hasFetchedRef = useRef(false);
 
   useEffect(() => {
+    if (hasFetchedRef.current) {
+      return;
+    }
+    hasFetchedRef.current = true;
     fetchTransactions();
   }, [fetchTransactions]);
 

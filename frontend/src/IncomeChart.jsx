@@ -1,11 +1,22 @@
+import { useMemo } from "react";
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { useFinanceStore } from "./store/useFinanceStore";
 
 export default function IncomeChart() {
-  const data = [
-    { name: "Job", value: 1200 },
-    { name: "Freelance", value: 600 },
-    { name: "Investments", value: 300 }
-  ];
+  const recurringIncome = useFinanceStore((state) => state.recurringIncome);
+
+  const data = useMemo(() => {
+    const totalsByCategory = (Array.isArray(recurringIncome) ? recurringIncome : []).reduce(
+      (totals, item) => {
+        const category = item?.category || "Other";
+        totals[category] = (totals[category] || 0) + Number(item?.amount || 0);
+        return totals;
+      },
+      {}
+    );
+
+    return Object.entries(totalsByCategory).map(([name, value]) => ({ name, value }));
+  }, [recurringIncome]);
 
   const COLORS = ["#3B82F6", "#60A5FA", "#93C5FD"];
 
@@ -17,6 +28,7 @@ export default function IncomeChart() {
       border: "1px solid #E2E8F0"
     }}>
       <h3 style={{ marginBottom: "16px", color: "#0F172A" }}>Income Breakdown</h3>
+      {data.length === 0 && <p style={{ color: "#64748B" }}>No recurring income yet.</p>}
       <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie data={data} dataKey="value" outerRadius={80} fill="#3B82F6" label>

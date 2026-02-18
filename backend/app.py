@@ -34,6 +34,23 @@ def delete_transaction(id):
     return {"status": "deleted"}
 
 
+@app.patch("/api/transactions/<int:id>/category")
+def update_transaction_category(id):
+    data = request.get_json() or {}
+    category = data.get("category", "")
+
+    if not isinstance(category, str) or not category.strip():
+        return {"error": "category is required"}, 400
+
+    db = get_db()
+    db.execute(
+        "UPDATE transactions SET category = ? WHERE id = ?",
+        (category.strip(), id),
+    )
+    db.commit()
+    return {"status": "updated"}
+
+
 @app.get("/api/income")
 def get_income():
     db = get_db()

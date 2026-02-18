@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useFinanceStore } from "./store/useFinanceStore";
 import {
   PieChart,
@@ -16,14 +16,13 @@ const CATEGORY_COLORS = {
   Other: "#A855F7",
 };
 
-const DEFAULT_INCOME = [
-  { id: 1, name: "Job", amount: 2500, category: "Salary" },
-  { id: 2, name: "Freelance Retainer", amount: 600, category: "Freelance" },
-  { id: 3, name: "Dividends", amount: 120, category: "Investments" },
-];
-
 export default function Income() {
-  const { recurringIncome, setRecurringIncome } = useFinanceStore();
+  const {
+    recurringIncome,
+    recurringIncomeCategories,
+    setRecurringIncome,
+    addRecurringIncomeCategory,
+  } = useFinanceStore();
   
   console.log("recurringIncome =", recurringIncome);
   
@@ -47,12 +46,8 @@ export default function Income() {
   const [form, setForm] = useState({
     name: "",
     amount: "",
-    category: "Salary",
+    category: recurringIncomeCategories[0] || "Salary",
   });
-
-  useEffect(() => {
-    setRecurringIncome(DEFAULT_INCOME);
-  }, [setRecurringIncome]);
 
 
   const totalThisMonth = useMemo(
@@ -75,7 +70,7 @@ export default function Income() {
 
   const startAdd = () => {
     setEditingId(null);
-    setForm({ name: "", amount: "", category: "Salary" });
+    setForm({ name: "", amount: "", category: recurringIncomeCategories[0] || "Salary" });
   };
 
   const startEdit = (item) => {
@@ -100,8 +95,9 @@ export default function Income() {
   setRecurringIncome(prev =>
     Array.isArray(prev) ? [...prev, newItem] : [newItem]
   );
+  addRecurringIncomeCategory(newItem.category);
 
-  setForm({ name: "", amount: "", category: "Salary" });
+  setForm({ name: "", amount: "", category: recurringIncomeCategories[0] || "Salary" });
 };
 
   const handleDelete = (id) => {
@@ -479,10 +475,11 @@ export default function Income() {
                   background: "white",
                 }}
               >
-                <option value="Salary">Salary</option>
-                <option value="Freelance">Freelance</option>
-                <option value="Investments">Investments</option>
-                <option value="Other">Other</option>
+                {recurringIncomeCategories.map((category) => (
+                  <option key={category} value={category}>
+                    {category}
+                  </option>
+                ))}
               </select>
             </div>
 

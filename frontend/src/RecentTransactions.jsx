@@ -52,18 +52,19 @@ export default function RecentTransactions({ showAddTransaction = true }) {
       ) : null}
       <div
         style={{
-          background: "#FFFFFF",
+          background: "#1F2937",
           padding: "24px",
-          borderRadius: "12px",
-          border: "1px solid #E2E8F0",
+          borderRadius: "14px",
+          border: "1px solid #334155",
+          boxShadow: "0 16px 32px rgba(2, 6, 23, 0.35)",
         }}
       >
-        <h3 style={{ marginBottom: "16px", color: "#0F172A" }}>Recent Transactions</h3>
+        <h3 style={{ marginBottom: "16px", marginTop: 0, color: "#E2E8F0" }}>Recent Transactions</h3>
 
-        {isLoading && <p style={{ color: "#64748B" }}>Loading transactions...</p>}
-        {error && <p style={{ color: "#B91C1C" }}>{error}</p>}
+        {isLoading && <p style={{ color: "#94A3B8" }}>Loading transactions...</p>}
+        {error && <p style={{ color: "#F87171" }}>{error}</p>}
         {!isLoading && transactions.length === 0 && (
-          <p style={{ color: "#64748B" }}>No transactions yet.</p>
+          <p style={{ color: "#94A3B8" }}>No transactions yet.</p>
         )}
         {transactions.map((transaction) => (
           <TransactionItem

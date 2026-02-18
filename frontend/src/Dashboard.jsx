@@ -17,24 +17,25 @@ export default function Dashboard() {
   const isPositive = netIncome >= 0;
 
   return (
-    <div style={{ padding: "32px" }}>
-      <h1 style={{ color: "#0F172A" }}>Dashboard</h1>
+    <div style={{ padding: "32px", maxWidth: "1200px", margin: "0 auto" }}>
+      <h1 style={{ color: "#E2E8F0", margin: 0 }}>Dashboard</h1>
       <div
         style={{
           marginTop: "16px",
-          background: "#FFFFFF",
-          padding: "16px",
-          borderRadius: "12px",
-          border: `1px solid ${isPositive ? "#86EFAC" : "#FCA5A5"}`,
+          background: "#1F2937",
+          padding: "18px 20px",
+          borderRadius: "14px",
+          border: `1px solid ${isPositive ? "#34D39966" : "#F8717166"}`,
+          boxShadow: "0 16px 32px rgba(2, 6, 23, 0.35)",
         }}
       >
-        <div style={{ color: "#64748B", fontSize: "0.9rem" }}>Monthly Net Income</div>
+        <div style={{ color: "#94A3B8", fontSize: "0.85rem", letterSpacing: "0.2px" }}>Monthly Net Income</div>
         <div
           style={{
             marginTop: "4px",
             fontSize: "1.6rem",
             fontWeight: 700,
-            color: isPositive ? "#15803D" : "#B91C1C",
+            color: isPositive ? "#34D399" : "#F87171",
           }}
         >
           ${netIncome.toFixed(2)}
@@ -43,7 +44,7 @@ export default function Dashboard() {
 
       <div style={{
         display: "grid",
-        gridTemplateColumns: "1fr 1fr",
+        gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
         gap: "24px",
         marginTop: "24px"
       }}>

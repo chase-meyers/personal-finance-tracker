@@ -22,13 +22,14 @@ export default function IncomeChart() {
 
   return (
     <div style={{
-      background: "#FFFFFF",
+      background: "#1F2937",
       padding: "24px",
-      borderRadius: "12px",
-      border: "1px solid #E2E8F0"
+      borderRadius: "14px",
+      border: "1px solid #334155",
+      boxShadow: "0 16px 32px rgba(2, 6, 23, 0.35)",
     }}>
-      <h3 style={{ marginBottom: "16px", color: "#0F172A" }}>Income Breakdown</h3>
-      {data.length === 0 && <p style={{ color: "#64748B" }}>No recurring income yet.</p>}
+      <h3 style={{ marginTop: 0, marginBottom: "16px", color: "#E2E8F0" }}>Income Breakdown</h3>
+      {data.length === 0 && <p style={{ color: "#94A3B8" }}>No recurring income yet.</p>}
       <ResponsiveContainer width="100%" height={250}>
         <PieChart>
           <Pie data={data} dataKey="value" outerRadius={80} fill="#3B82F6" label>
@@ -36,7 +37,7 @@ export default function IncomeChart() {
               <Cell key={index} fill={COLORS[index]} />
             ))}
           </Pie>
-          <Tooltip />
+          <Tooltip contentStyle={{ background: "#0F172A", border: "1px solid #334155", borderRadius: "10px" }} labelStyle={{ color: "#CBD5E1" }} />
         </PieChart>
       </ResponsiveContainer>
     </div>

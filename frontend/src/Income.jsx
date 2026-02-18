@@ -109,23 +109,24 @@ export default function Income() {
   };
 
   return (
-    <div style={{ padding: "32px" }}>
-      <h1 style={{ color: "#0F172A", marginBottom: "8px" }}>Income</h1>
-      <p style={{ color: "#64748B", marginBottom: "24px" }}>
+    <div style={{ padding: "32px", maxWidth: "1200px", margin: "0 auto" }}>
+      <h1 style={{ color: "#E2E8F0", marginBottom: "8px", marginTop: 0 }}>Income</h1>
+      <p style={{ color: "#94A3B8", marginBottom: "24px" }}>
         Monthly recurring income, auto‑applied every month. No re‑entry.
       </p>
       <div style={{ 
-        background: "white",
-        padding: "16px",
-        borderRadius: "12px",
+        background: "#1F2937",
+        padding: "18px 20px",
+        borderRadius: "14px",
         marginBottom: "20px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.08)"
+        boxShadow: "0 16px 32px rgba(2, 6, 23, 0.35)",
+        border: "1px solid #334155",
       }}>
-        <h2 style={{ margin: 0, color: "#0F172A" }}>
+        <h2 style={{ margin: 0, color: "#E2E8F0" }}>
           Total Monthly Income: ${totalIncome.toLocaleString()}
         </h2>
       </div>
-      <div style={{ marginTop: "12px" }}>
+      <div style={{ marginTop: "12px", color: "#CBD5E1" }}>
         {Object.entries(categoryTotals).map(([category, amount]) => (
           <div key={category}>
             {category}: ${amount.toLocaleString()}
@@ -136,7 +137,7 @@ export default function Income() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1.2fr 1.8fr",
+          gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))",
           gap: "24px",
           marginBottom: "24px",
         }}
@@ -228,17 +229,18 @@ export default function Income() {
       <div
         style={{
           display: "grid",
-          gridTemplateColumns: "1.6fr 1.2fr",
+          gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
           gap: "24px",
         }}
       >
         {/* Recurring list */}
         <div
           style={{
-            background: "#FFFFFF",
+            background: "#1F2937",
             borderRadius: "16px",
             padding: "20px",
-            border: "1px solid #E2E8F0",
+            border: "1px solid #334155",
+            boxShadow: "0 16px 32px rgba(2, 6, 23, 0.35)",
           }}
         >
           <div
@@ -249,7 +251,7 @@ export default function Income() {
               alignItems: "center",
             }}
           >
-            <h3 style={{ margin: 0, color: "#0F172A" }}>
+            <h3 style={{ margin: 0, color: "#E2E8F0" }}>
               Recurring monthly income
             </h3>
           </div>
@@ -259,10 +261,10 @@ export default function Income() {
               style={{
                 padding: "16px",
                 borderRadius: "12px",
-                background: "#F9FAFB",
-                border: "1px dashed #CBD5E1",
+                background: "#0F172A",
+                border: "1px dashed #334155",
                 fontSize: "0.9rem",
-                color: "#6B7280",
+                color: "#94A3B8",
               }}
             >
               No recurring income yet. Add your salary, side income, and other
@@ -276,8 +278,8 @@ export default function Income() {
               style={{
                 padding: "14px 12px",
                 borderRadius: "12px",
-                border: "1px solid #E5E7EB",
-                background: "#F9FAFB",
+                border: "1px solid #334155",
+                background: "#111827",
                 marginBottom: "10px",
                 display: "flex",
                 justifyContent: "space-between",
@@ -289,7 +291,7 @@ export default function Income() {
                   style={{
                     fontWeight: 600,
                     fontSize: "0.98rem",
-                    color: "#0F172A",
+                    color: "#E2E8F0",
                   }}
                 >
                   {item.name}
@@ -316,7 +318,7 @@ export default function Income() {
                   style={{
                     fontWeight: 700,
                     fontSize: "1rem",
-                    color: "#0F172A",
+                    color: "#E2E8F0",
                   }}
                 >
                   ${Number(item.amount).toLocaleString()}
@@ -328,8 +330,9 @@ export default function Income() {
                       padding: "4px 10px",
                       fontSize: "0.75rem",
                       borderRadius: "999px",
-                      border: "1px solid #CBD5E1",
-                      background: "#F3F4F6",
+                      border: "1px solid #334155",
+                      background: "#0F172A",
+                      color: "#CBD5E1",
                       marginRight: "6px",
                       cursor: "pointer",
                     }}
@@ -342,9 +345,9 @@ export default function Income() {
                       padding: "4px 10px",
                       fontSize: "0.75rem",
                       borderRadius: "999px",
-                      border: "1px solid #FCA5A5",
-                      background: "#FEF2F2",
-                      color: "#B91C1C",
+                      border: "1px solid #7F1D1D",
+                      background: "#3F1D24",
+                      color: "#FCA5A5",
                       cursor: "pointer",
                     }}
                   >
@@ -359,10 +362,11 @@ export default function Income() {
         {/* Add / edit form */}
         <div
           style={{
-            background: "#FFFFFF",
+            background: "#1F2937",
             borderRadius: "16px",
             padding: "20px",
-            border: "1px solid #E2E8F0",
+            border: "1px solid #334155",
+            boxShadow: "0 16px 32px rgba(2, 6, 23, 0.35)",
           }}
         >
           <div
@@ -373,7 +377,7 @@ export default function Income() {
               alignItems: "center",
             }}
           >
-            <h3 style={{ margin: 0, color: "#0F172A" }}>
+            <h3 style={{ margin: 0, color: "#E2E8F0" }}>
               {editingId ? "Edit recurring income" : "Add recurring income"}
             </h3>
             {!editingId && (
@@ -383,8 +387,9 @@ export default function Income() {
                   fontSize: "0.75rem",
                   padding: "4px 10px",
                   borderRadius: "999px",
-                  border: "1px solid #E5E7EB",
-                  background: "#F9FAFB",
+                  border: "1px solid #334155",
+                  background: "#0F172A",
+                  color: "#CBD5E1",
                   cursor: "pointer",
                 }}
               >
@@ -399,7 +404,7 @@ export default function Income() {
                 style={{
                   display: "block",
                   fontSize: "0.8rem",
-                  color: "#6B7280",
+                  color: "#94A3B8",
                   marginBottom: "4px",
                 }}
               >
@@ -416,7 +421,9 @@ export default function Income() {
                   width: "100%",
                   padding: "8px 10px",
                   borderRadius: "8px",
-                  border: "1px solid #CBD5E1",
+                  border: "1px solid #334155",
+                  background: "#0F172A",
+                  color: "#E2E8F0",
                   fontSize: "0.9rem",
                 }}
               />
@@ -427,7 +434,7 @@ export default function Income() {
                 style={{
                   display: "block",
                   fontSize: "0.8rem",
-                  color: "#6B7280",
+                  color: "#94A3B8",
                   marginBottom: "4px",
                 }}
               >
@@ -444,7 +451,9 @@ export default function Income() {
                   width: "100%",
                   padding: "8px 10px",
                   borderRadius: "8px",
-                  border: "1px solid #CBD5E1",
+                  border: "1px solid #334155",
+                  background: "#0F172A",
+                  color: "#E2E8F0",
                   fontSize: "0.9rem",
                 }}
               />
@@ -455,7 +464,7 @@ export default function Income() {
                 style={{
                   display: "block",
                   fontSize: "0.8rem",
-                  color: "#6B7280",
+                  color: "#94A3B8",
                   marginBottom: "4px",
                 }}
               >
@@ -470,9 +479,10 @@ export default function Income() {
                   width: "100%",
                   padding: "8px 10px",
                   borderRadius: "8px",
-                  border: "1px solid #CBD5E1",
+                  border: "1px solid #334155",
                   fontSize: "0.9rem",
-                  background: "white",
+                  background: "#0F172A",
+                  color: "#E2E8F0",
                 }}
               >
                 {recurringIncomeCategories.map((category) => (

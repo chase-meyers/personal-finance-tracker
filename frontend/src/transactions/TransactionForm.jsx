@@ -1,11 +1,12 @@
 import { useMemo, useState } from "react";
 
 const formCardStyle = {
-  background: "#FFFFFF",
+  background: "#1F2937",
   padding: "24px",
-  borderRadius: "12px",
-  border: "1px solid #E2E8F0",
+  borderRadius: "14px",
+  border: "1px solid #334155",
   marginBottom: "16px",
+  boxShadow: "0 16px 32px rgba(2, 6, 23, 0.35)",
 };
 
 export default function TransactionForm({ categories, onSubmit, onAddCategory }) {
@@ -55,7 +56,7 @@ export default function TransactionForm({ categories, onSubmit, onAddCategory })
 
   return (
     <div style={formCardStyle}>
-      <h3 style={{ marginTop: 0, marginBottom: "16px", color: "#0F172A" }}>Add Transaction</h3>
+      <h3 style={{ marginTop: 0, marginBottom: "16px", color: "#E2E8F0" }}>Add Transaction</h3>
       <form onSubmit={handleSubmit}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "12px" }}>
           <input
@@ -65,14 +66,14 @@ export default function TransactionForm({ categories, onSubmit, onAddCategory })
             placeholder="Amount"
             value={amount}
             onChange={(event) => setAmount(event.target.value)}
-            style={{ padding: "10px", borderRadius: "8px", border: "1px solid #CBD5E1" }}
+            style={{ padding: "10px", borderRadius: "8px", border: "1px solid #334155", background: "#0F172A", color: "#E2E8F0" }}
             required
           />
           <input
             type="date"
             value={date}
             onChange={(event) => setDate(event.target.value)}
-            style={{ padding: "10px", borderRadius: "8px", border: "1px solid #CBD5E1" }}
+            style={{ padding: "10px", borderRadius: "8px", border: "1px solid #334155", background: "#0F172A", color: "#E2E8F0" }}
             required
           />
         </div>
@@ -86,14 +87,16 @@ export default function TransactionForm({ categories, onSubmit, onAddCategory })
             width: "100%",
             padding: "10px",
             borderRadius: "8px",
-            border: "1px solid #CBD5E1",
+            border: "1px solid #334155",
+            background: "#0F172A",
+            color: "#E2E8F0",
           }}
         />
         <div style={{ display: "grid", gridTemplateColumns: "1fr auto", gap: "8px", marginTop: "12px" }}>
           <select
             value={category}
             onChange={(event) => setCategory(event.target.value)}
-            style={{ padding: "10px", borderRadius: "8px", border: "1px solid #CBD5E1" }}
+            style={{ padding: "10px", borderRadius: "8px", border: "1px solid #334155", background: "#0F172A", color: "#E2E8F0" }}
           >
             {normalizedCategories.map((option) => (
               <option key={option} value={option}>
@@ -108,9 +111,10 @@ export default function TransactionForm({ categories, onSubmit, onAddCategory })
               padding: "10px 16px",
               borderRadius: "8px",
               border: "none",
-              background: "#3B82F6",
-              color: "white",
+              background: "#2563EB",
+              color: "#F8FAFC",
               cursor: "pointer",
+              transition: "all 0.2s ease",
             }}
           >
             {isSubmitting ? "Saving..." : "Add"}
@@ -122,7 +126,7 @@ export default function TransactionForm({ categories, onSubmit, onAddCategory })
             value={customCategory}
             onChange={(event) => setCustomCategory(event.target.value)}
             placeholder="Create category"
-            style={{ padding: "10px", borderRadius: "8px", border: "1px solid #CBD5E1" }}
+            style={{ padding: "10px", borderRadius: "8px", border: "1px solid #334155", background: "#0F172A", color: "#E2E8F0" }}
           />
           <button
             type="button"
@@ -130,16 +134,18 @@ export default function TransactionForm({ categories, onSubmit, onAddCategory })
             style={{
               padding: "10px 16px",
               borderRadius: "8px",
-              border: "1px solid #CBD5E1",
-              background: "#F8FAFC",
+              border: "1px solid #334155",
+              background: "#111827",
+              color: "#CBD5E1",
               cursor: "pointer",
+              transition: "all 0.2s ease",
             }}
           >
             Add Category
           </button>
         </div>
       </form>
-      {error && <p style={{ marginBottom: 0, color: "#B91C1C" }}>{error}</p>}
+      {error && <p style={{ marginBottom: 0, color: "#F87171" }}>{error}</p>}
     </div>
   );
 }

@@ -1,4 +1,4 @@
-export default function TransactionItem({ transaction, categories, onChangeCategory }) {
+export default function TransactionItem({ transaction, categories, onChangeCategory, onDelete }) {
   return (
     <div
       style={{
@@ -17,17 +17,33 @@ export default function TransactionItem({ transaction, categories, onChangeCateg
           {transaction.description ? ` - ${transaction.description}` : ""}
         </div>
       </div>
-      <select
-        value={transaction.category || "Other"}
-        onChange={(event) => onChangeCategory(transaction.id, event.target.value)}
-        style={{ padding: "8px", borderRadius: "8px", border: "1px solid #CBD5E1" }}
-      >
-        {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
-          </option>
-        ))}
-      </select>
+      <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+        <select
+          value={transaction.category || "Other"}
+          onChange={(event) => onChangeCategory(transaction.id, event.target.value)}
+          style={{ padding: "8px", borderRadius: "8px", border: "1px solid #CBD5E1" }}
+        >
+          {categories.map((category) => (
+            <option key={category} value={category}>
+              {category}
+            </option>
+          ))}
+        </select>
+        <button
+          type="button"
+          onClick={() => onDelete(transaction.id)}
+          style={{
+            padding: "8px 10px",
+            borderRadius: "8px",
+            border: "1px solid #FCA5A5",
+            background: "#FEF2F2",
+            color: "#B91C1C",
+            cursor: "pointer",
+          }}
+        >
+          Delete
+        </button>
+      </div>
     </div>
   );
 }

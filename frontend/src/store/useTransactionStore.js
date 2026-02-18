@@ -13,17 +13,36 @@ const normalizeCategory = (value) => {
   return trimmed.length > 0 ? trimmed : "Other";
 };
 
-const isCurrentMonthDate = (value) => {
+const extractYearMonth = (value) => {
+  if (typeof value === "string") {
+    const isoMatch = value.match(/^(\d{4})-(\d{2})/);
+    if (isoMatch) {
+      return {
+        year: Number(isoMatch[1]),
+        month: Number(isoMatch[2]),
+      };
+    }
+  }
+
   const parsed = new Date(value);
   if (Number.isNaN(parsed.getTime())) {
+    return null;
+  }
+
+  return {
+    year: parsed.getFullYear(),
+    month: parsed.getMonth() + 1,
+  };
+};
+
+const isCurrentMonthDate = (value) => {
+  const yearMonth = extractYearMonth(value);
+  if (!yearMonth) {
     return false;
   }
 
   const now = new Date();
-  return (
-    parsed.getFullYear() === now.getFullYear() &&
-    parsed.getMonth() === now.getMonth()
-  );
+  return yearMonth.year === now.getFullYear() && yearMonth.month === now.getMonth() + 1;
 };
 
 const sumCurrentMonthSpending = (transactions) =>
@@ -143,6 +162,35 @@ export const useTransactionStore = create((set, get) => ({
       });
     } catch (error) {
       const message = error instanceof Error ? error.message : "Failed to update category.";
+      set({ error: message });
+      throw error;
+    }
+  },
+
+  deleteTransaction: async (id) => {
+    set({ error: null });
+    const previousTransactions = get().transactions;
+    const nextTransactions = previousTransactions.filter((transaction) => transaction.id !== id);
+
+    set({ transactions: nextTransactions });
+    useFinanceStore
+      .getState()
+      .setTotalMonthlySpending(sumCurrentMonthSpending(nextTransactions));
+
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete transaction.");
+      }
+    } catch (error) {
+      set({ transactions: previousTransactions });
+      useFinanceStore
+        .getState()
+        .setTotalMonthlySpending(sumCurrentMonthSpending(previousTransactions));
+      const message = error instanceof Error ? error.message : "Failed to delete transaction.";
       set({ error: message });
       throw error;
     }

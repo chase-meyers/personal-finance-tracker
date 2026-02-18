@@ -52,7 +52,7 @@ export default function Dashboard() {
       </div>
 
       <div style={{ marginTop: "32px" }}>
-        <RecentTransactions />
+        <RecentTransactions showAddTransaction={false} />
       </div>
     </div>
   );

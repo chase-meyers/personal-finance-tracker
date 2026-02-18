@@ -3,7 +3,7 @@ import { useTransactionStore } from "./store/useTransactionStore";
 import TransactionForm from "./transactions/TransactionForm";
 import TransactionItem from "./transactions/TransactionItem";
 
-export default function RecentTransactions() {
+export default function RecentTransactions({ showAddTransaction = true }) {
   const {
     transactions,
     categories,
@@ -13,6 +13,7 @@ export default function RecentTransactions() {
     addTransaction,
     addCategory,
     updateTransactionCategory,
+    deleteTransaction,
   } = useTransactionStore();
   const hasFetchedRef = useRef(false);
 
@@ -32,13 +33,23 @@ export default function RecentTransactions() {
     }
   };
 
+  const handleDelete = async (id) => {
+    try {
+      await deleteTransaction(id);
+    } catch (_error) {
+      // Errors are surfaced through the store error state where applicable.
+    }
+  };
+
   return (
     <>
-      <TransactionForm
-        categories={categories}
-        onSubmit={addTransaction}
-        onAddCategory={addCategory}
-      />
+      {showAddTransaction ? (
+        <TransactionForm
+          categories={categories}
+          onSubmit={addTransaction}
+          onAddCategory={addCategory}
+        />
+      ) : null}
       <div
         style={{
           background: "#FFFFFF",
@@ -60,6 +71,7 @@ export default function RecentTransactions() {
             transaction={transaction}
             categories={categories}
             onChangeCategory={handleChangeCategory}
+            onDelete={handleDelete}
           />
         ))}
       </div>
